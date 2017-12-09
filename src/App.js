@@ -1,50 +1,50 @@
 import React, { Component } from 'react';
 import './App.css';
-import ValidationComponent from './ValidationComponent/ValidationComponent'
-import CharComponent from './CharComponent/CharComponent'
+import Validation from './Validation/Validation'
+import Char from './Char/Char'
 
 export default class App extends Component {
   state = {
-    text: '',
-    textLength: 0,
+    userInput: ''
   }
   
-  onChangeHandler = (event) => {
-    const textLength = event.target.value.split('').length
+  inputChangedHandler = (event) => {
     this.setState({
-      text: event.target.value,
-      textLength: textLength
+      userInput: event.target.value
     })
   }
  
-  deleteChar = (charIndex) => {
-    const text = [...this.state.text]
-    const textLength = [...this.state.textLength]
-
-    this.state.text.splice(charIndex, 1)
-    // this.setState({
-    //   text: text,
-    //   // textLength: text.length,
-    // })
-    // debugger;
+  deleteCharHandler = (index) => {
+    const text = this.state.userInput.split('');
+    text.splice(index, 1);
+    const updatedText = text.join('');
+    this.setState({
+      userInput: updatedText
+    })
   }
 
   render() {
+    const charList = this.state.userInput.split('').map((ch, index) => {
+      return <Char 
+        character={ch} 
+        key={index} 
+        clicked={() => this.deleteCharHandler(index)}
+        />;
+    })
+
     return (
     <div>
       <input 
         type="text"
-        onChange={(event)=>this.onChangeHandler(event)}
+        value={this.state.userInput}
+        onChange={this.inputChangedHandler}
       />
-      <p>Text length: {this.state.textLength}</p>
-      <ValidationComponent
-        textLength={this.state.textLength}
+      <p>userInput: {this.state.userInput}</p>
+      <Validation
+        inputLength={this.state.userInput.length}
         change={this.onChangeHandler}
       />
-      <CharComponent 
-        text={this.state.text}
-        remove={this.deleteChar}
-      />
+      {charList}
     </div>
   )}
 };
