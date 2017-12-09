@@ -1,21 +1,50 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import ValidationComponent from './ValidationComponent/ValidationComponent'
+import CharComponent from './CharComponent/CharComponent'
 
-class App extends Component {
+export default class App extends Component {
+  state = {
+    text: '',
+    textLength: 0,
+  }
+  
+  onChangeHandler = (event) => {
+    const textLength = event.target.value.split('').length
+    this.setState({
+      text: event.target.value,
+      textLength: textLength
+    })
+  }
+ 
+  deleteChar = (charIndex) => {
+    const text = [...this.state.text]
+    const textLength = [...this.state.textLength]
+
+    this.state.text.splice(charIndex, 1)
+    // this.setState({
+    //   text: text,
+    //   // textLength: text.length,
+    // })
+    // debugger;
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
-
-export default App;
+    <div>
+      <input 
+        type="text"
+        onChange={(event)=>this.onChangeHandler(event)}
+      />
+      <p>Text length: {this.state.textLength}</p>
+      <ValidationComponent
+        textLength={this.state.textLength}
+        change={this.onChangeHandler}
+      />
+      <CharComponent 
+        text={this.state.text}
+        remove={this.deleteChar}
+      />
+    </div>
+  )}
+};
